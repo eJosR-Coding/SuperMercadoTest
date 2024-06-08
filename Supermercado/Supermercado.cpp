@@ -6,10 +6,12 @@
 #include "ArbolB.hpp"
 #include "HashTabla.hpp"
 #include "Sorting.hpp"
+#include "archivos.hpp"
 
 using namespace std;
 
 void mostrarmenu() {
+    /* Mostrar el menú de opciones */
     std::cout << "\n========================================\n";
     std::cout << "===            Menu productos          ===\n";
     std::cout << "========================================\n\n";
@@ -19,27 +21,33 @@ void mostrarmenu() {
     std::cout << "4. Ordenar por precio\n";
     std::cout << "5. Eliminar producto por ID\n";
     std::cout << "6. Verificar si el nodo mayor es múltiplo de 5\n";
-    std::cout << "7. Salir\n";
+    std::cout << "7. Guardar productos en archivo\n";
+    std::cout << "8. Cargar productos desde archivo\n";
+    std::cout << "9. Salir\n";
     std::cout << "========================================\n";
     std::cout << "Seleccione una opcion: ";
 }
 
 string generarNombreAleatorio() {
+    /* Generar nombre aleatorio de producto */
     const vector<string> nombres = { "Leche", "Pan", "Queso", "Jamon", "Cereal", "Mantequilla", "Arroz", "Azucar", "Sal", "Aceite" };
     return nombres[rand() % nombres.size()];
 }
 
 string generarCategoriaAleatoria() {
+    /* Generar categoría aleatoria de producto */
     const vector<string> categorias = { "Lacteos", "Panaderia", "Carnes", "Cereales", "Condimentos" };
     return categorias[rand() % categorias.size()];
 }
 
 string generarFechaCaducidadAleatoria() {
+    /* Generar fecha de caducidad aleatoria */
     const vector<string> fechas = { "2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01" };
     return fechas[rand() % fechas.size()];
 }
 
 Producto generarProductoAleatorio() {
+    /* Generar producto aleatorio */
     static int id = 1;
     string nombre = generarNombreAleatorio();
     double precio = (rand() % 1000) / 10.0;
@@ -50,6 +58,7 @@ Producto generarProductoAleatorio() {
 }
 
 void generarDatosProductos(vector<Producto*>& productos, int n) {
+    /* Generar datos de productos aleatorios */
     srand(time(0));
     for (int i = 0; i < n; ++i) {
         productos.push_back(new Producto(generarProductoAleatorio()));
@@ -57,7 +66,19 @@ void generarDatosProductos(vector<Producto*>& productos, int n) {
 }
 
 bool compararPorPrecio(const Producto* a, const Producto* b) {
+    /* Comparar productos por precio */
     return a->precio < b->precio;
+}
+
+vector<int> buscarTodosLosIndices(const vector<Producto*>& productos, const Producto& target) {
+    /* Buscar todos los índices de un producto en el vector */
+    vector<int> indices;
+    for (size_t i = 0; i < productos.size(); ++i) {
+        if (*productos[i] == target) {
+            indices.push_back(i);
+        }
+    }
+    return indices;
 }
 
 int main() {
@@ -185,13 +206,28 @@ int main() {
             break;
         case 7:
             system("cls");
+            /* Guardar productos en archivo */
+            guardarProductosEnArchivo(productos);
+            break;
+        case 8:
+            system("cls");
+            /* Cargar productos desde archivo */
+            cargarProductosDesdeArchivo(productos);
+            break;
+        case 9:
+            system("cls");
             cout << "Saliendo del programa...\n";
             break;
         default:
             cout << "Opción no válida.\n";
             break;
         }
-    } while (opcion != 7);
+    } while (opcion != 9);
+
+    // Liberar memoria de los productos
+    for (auto producto : productos) {
+        delete producto;
+    }
 
     return 0;
 }

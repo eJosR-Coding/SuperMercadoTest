@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="Arbolb.h" />
     <ClInclude Include="ArbolB.hpp" />
+    <ClInclude Include="Archivos.hpp" />
     <ClInclude Include="HashEntidad.hpp" />
     <ClInclude Include="HashTabla.hpp" />
     <ClInclude Include="pch.h" />
